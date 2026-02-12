@@ -6,6 +6,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.128.6",
-    "pydantic>=2.12.5",
-    "pymongo>=4.16.0",
+    "pydantic[email]>=2.12.5",
+    "sqlmodel>=0.0.33",
 ]
