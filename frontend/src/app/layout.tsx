@@ -32,9 +32,9 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang="en" suppressHydrationWarning className="h-full">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} h-full bg-zinc-50 antialiased dark:bg-black`}
+                className={`${geistSans.variable} ${geistMono.variable} flex h-full flex-col bg-zinc-50 antialiased dark:bg-black`}
             >
                 <ThemeProvider
                     attribute="class"
