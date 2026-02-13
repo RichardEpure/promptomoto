@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Providers } from "@/components/providers";
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -36,12 +36,7 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} flex h-full flex-col bg-zinc-50 antialiased dark:bg-black`}
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    enableSystem
-                    disableTransitionOnChange
-                >
+                <Providers>
                     <header className="flex h-14 items-center justify-between px-4">
                         <NavigationMenu>
                             <NavigationMenuList>
@@ -65,7 +60,7 @@ export default function RootLayout({
                         <ThemeSwitcher />
                     </header>
                     {children}
-                </ThemeProvider>
+                </Providers>
             </body>
         </html>
     );
