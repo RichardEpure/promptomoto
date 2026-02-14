@@ -17,29 +17,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const queryClient = useQueryClient();
 
     const { data: user, isLoading } = useQuery({
-        queryKey: ["auth", "me"],
+        queryKey: ["auth"],
         queryFn: api.me,
         retry: false,
         staleTime: 5 * 60 * 1000,
     });
 
     const logout = useCallback(() => {
-        queryClient.setQueryData(["auth", "me"], null);
-        queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+        queryClient.setQueryData(["auth"], null);
+        queryClient.invalidateQueries({ queryKey: ["auth"] });
     }, [queryClient]);
 
     const refetch = useCallback(() => {
-        queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+        queryClient.invalidateQueries({ queryKey: ["auth"] });
     }, [queryClient]);
 
     return (
-        <AuthContext value={{
-            user: user ?? null,
-            isLoading,
-            isAuthenticated: !!user,
-            logout,
-            refetch,
-        }}>
+        <AuthContext
+            value={{
+                user: user ?? null,
+                isLoading,
+                isAuthenticated: !!user,
+                logout,
+                refetch,
+            }}
+        >
             {children}
         </AuthContext>
     );
