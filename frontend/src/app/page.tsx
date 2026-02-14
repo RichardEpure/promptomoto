@@ -19,7 +19,7 @@ export default function Home() {
     };
 
     return (
-        <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col items-center px-16 py-32">
+        <main className="mx-auto flex w-full max-w-3xl flex-col items-center px-16 py-32">
             <Field>
                 <FieldLabel className="text-4xl" htmlFor="prompt-search">
                     Promptomoto
