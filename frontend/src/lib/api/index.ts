@@ -29,7 +29,7 @@ export async function handleResponse<T>(response: Response): Promise<T> {
         if (error.detail) {
             throw new ApiError(error.detail);
         } else {
-            throw new Error(`API Requst failed: ${response}`);
+            throw new Error(`API request failed: ${response}`);
         }
     }
     return response.json();
