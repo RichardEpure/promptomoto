@@ -6,7 +6,7 @@ export interface CreateUserErrorDetail {
     email?: string;
 }
 
-type ApiErrorDetail = { type: string } & CreateUserErrorDetail;
+type ApiErrorDetail = CreateUserErrorDetail;
 
 export class ApiError extends Error {
     detail: ApiErrorDetail;
