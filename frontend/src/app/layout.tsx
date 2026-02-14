@@ -2,14 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import Link from "next/link";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import NavigationMenu from "@/components/navigation-menu";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -34,33 +27,10 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning className="h-full">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} flex h-full flex-col bg-zinc-50 antialiased dark:bg-black`}
+                className={`${geistSans.variable} ${geistMono.variable} bg-background flex h-full flex-col antialiased`}
             >
-                <Providers>
-                    <header className="flex h-14 items-center justify-between px-4">
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                                <NavigationMenuItem>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="/">Home</Link>
-                                    </NavigationMenuLink>
-                                </NavigationMenuItem>
-                                <NavigationMenuItem>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="/discover">Discover</Link>
-                                    </NavigationMenuLink>
-                                </NavigationMenuItem>
-                                <NavigationMenuItem>
-                                    <NavigationMenuLink asChild>
-                                        <Link href="/collection">Collection</Link>
-                                    </NavigationMenuLink>
-                                </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                        <ThemeSwitcher />
-                    </header>
-                    {children}
-                </Providers>
+                <NavigationMenu />
+                <Providers>{children}</Providers>
             </body>
         </html>
     );
