@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -31,28 +32,26 @@ export default function SignupPage() {
             router.push("/");
         },
         onError: (error: Error) => {
-            if (!(error instanceof ApiError)) {
-                return;
-            }
+            if (error instanceof ApiError) {
+                const details = error.detail;
+                if (details.type === "user_exists") {
+                    if (details.username) {
+                        form.setError("username", {
+                            type: "custom",
+                            message: "Username is taken.",
+                        });
+                    }
 
-            const details = error.detail;
-            if (details.type !== "user_exists") {
-                return;
+                    if (details.email) {
+                        form.setError("email", {
+                            type: "custom",
+                            message: "Email is taken.",
+                        });
+                    }
+                    return;
+                }
             }
-
-            if (details.username) {
-                form.setError("username", {
-                    type: "custom",
-                    message: "Username is taken.",
-                });
-            }
-
-            if (details.email) {
-                form.setError("email", {
-                    type: "custom",
-                    message: "Email is taken.",
-                });
-            }
+            toast.error("An unexpected error occurred.");
         },
     });
 

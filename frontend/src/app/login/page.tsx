@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -25,16 +26,16 @@ export default function LoginPage() {
             router.push("/");
         },
         onError: (error: Error) => {
-            if (!(error instanceof ApiError)) {
-                return;
+            if (error instanceof ApiError) {
+                if (error.status === 401) {
+                    form.setError("password", {
+                        type: "custom",
+                        message: "Invalid username or password.",
+                    });
+                    return;
+                }
             }
-
-            if (error.status === 401) {
-                form.setError("password", {
-                    type: "custom",
-                    message: "Invalid username or password.",
-                });
-            }
+            toast.error("An unexpected error occurred.");
         },
     });
 
