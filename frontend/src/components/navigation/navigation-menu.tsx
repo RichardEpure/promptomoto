@@ -1,0 +1,75 @@
+"use client";
+
+import {
+    NavigationMenu as ShadcnNavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import Link from "next/link";
+import { ThemeSwitcher } from "@/components/navigation/theme-switcher";
+import { useAuth } from "../providers/auth";
+
+function ListItem({
+    title,
+    children,
+    href,
+    ...props
+}: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
+    return (
+        <li {...props}>
+            <NavigationMenuLink asChild>
+                <Link href={href}>
+                    <div className="flex flex-col gap-1 text-sm">
+                        <div className="leading-none font-medium">{title}</div>
+                        <div className="text-muted-foreground line-clamp-2">{children}</div>
+                    </div>
+                </Link>
+            </NavigationMenuLink>
+        </li>
+    );
+}
+
+export default function NavigationMenu() {
+    const { isAuthenticated } = useAuth();
+
+    return (
+        <header className="flex h-14 items-center justify-between px-4">
+            <ShadcnNavigationMenu>
+                <NavigationMenuList>
+                    <NavigationMenuItem>
+                        <NavigationMenuLink asChild>
+                            <Link href="/">Home</Link>
+                        </NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                        <NavigationMenuLink asChild>
+                            <Link href="/discover">Discover</Link>
+                        </NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                        <NavigationMenuTrigger>Profile</NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                            <ul className="w-96">
+                                {isAuthenticated ? (
+                                    <>
+                                        <ListItem href="/" title="Log Out"></ListItem>
+                                        <ListItem href="/collection" title="Collection"></ListItem>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ListItem href="/login" title="Log In"></ListItem>
+                                        <ListItem href="/signup" title="Sign Up"></ListItem>
+                                    </>
+                                )}
+                            </ul>
+                        </NavigationMenuContent>
+                    </NavigationMenuItem>
+                </NavigationMenuList>
+            </ShadcnNavigationMenu>
+            <ThemeSwitcher />
+        </header>
+    );
+}

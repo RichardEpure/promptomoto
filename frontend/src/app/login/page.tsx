@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/components/providers/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -15,6 +16,8 @@ import { toast } from "sonner";
 export default function LoginPage() {
     const router = useRouter();
 
+    const auth = useAuth();
+
     const form = useForm<UserLogin>({
         resolver: zodResolver(USER_LOGIN.schema),
         defaultValues: USER_LOGIN.defaultValues(),
@@ -23,6 +26,7 @@ export default function LoginPage() {
     const mutation = useMutation({
         mutationFn: api.login,
         onSuccess: () => {
+            auth.refetch();
             router.push("/");
         },
         onError: (error: Error) => {
