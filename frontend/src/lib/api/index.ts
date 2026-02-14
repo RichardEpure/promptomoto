@@ -1,4 +1,3 @@
-import { getAccessToken } from "../jwt";
 import { usersApi, CreateUserErrorDetail } from "./users";
 
 export interface GenericErrorDetail {
@@ -27,16 +26,13 @@ export class ApiError extends Error {
     }
 }
 
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+export const BASE_URL = "/api";
 
 export const getHeaders = () => {
     const headers: Record<string, string> = {
+        credentials: "include",
         "Content-Type": "application/json",
     };
-    const token = getAccessToken();
-    if (token) {
-        headers["Authorization"] = `${token.token_type} ${token.access_token}`;
-    }
     return headers;
 };
 

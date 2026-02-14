@@ -5,7 +5,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api, ApiError } from "@/lib/api";
-import { setAccessToken } from "@/lib/jwt";
 import { USER_LOGIN, UserLogin } from "@/lib/models/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -18,9 +17,9 @@ export default function LoginPage() {
     });
 
     const mutation = useMutation({
-        mutationFn: api.loginForAccessToken,
-        onSuccess: (token) => {
-            setAccessToken(token);
+        mutationFn: api.login,
+        onSuccess: (user) => {
+            console.log("Logged in successfully:", user);
         },
         onError: (error: Error) => {
             if (!(error instanceof ApiError)) {
@@ -33,7 +32,6 @@ export default function LoginPage() {
                     message: "Invalid username or password.",
                 });
             }
-            console.log(error);
         },
     });
 

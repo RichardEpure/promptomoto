@@ -1,8 +1,5 @@
-import { getHeaders, handleResponse } from ".";
-import { AccessToken } from "../jwt";
+import { BASE_URL, getHeaders, handleResponse } from ".";
 import { USER_PUBLIC, UserCreate, UserLogin } from "../models/users";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface CreateUserErrorDetail {
     type: "user_exists";
@@ -19,7 +16,7 @@ export const usersApi = {
         });
         return USER_PUBLIC.schema.parse(await handleResponse(response));
     },
-    loginForAccessToken: async (userLogin: UserLogin) => {
+    login: async (userLogin: UserLogin) => {
         const body = new URLSearchParams();
         body.append("username", userLogin.username);
         body.append("password", userLogin.password);
@@ -30,6 +27,13 @@ export const usersApi = {
             },
             body,
         });
-        return handleResponse<AccessToken>(response);
+        return USER_PUBLIC.schema.parse(await handleResponse(response));
+    },
+    me: async () => {
+        const response = await fetch(`${BASE_URL}/users/me`, {
+            method: "GET",
+            headers: getHeaders(),
+        });
+        return USER_PUBLIC.schema.parse(await handleResponse(response));
     },
 };
