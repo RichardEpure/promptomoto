@@ -1,10 +1,11 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/providers/theme/theme-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "sonner";
 import { useTheme } from "next-themes";
+import { AuthProvider } from "./auth";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 enableSystem
                 disableTransitionOnChange
             >
-                {children}
+                <AuthProvider>{children}</AuthProvider>
                 <AppToaster />
             </ThemeProvider>
             <ReactQueryDevtools />
