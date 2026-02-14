@@ -30,7 +30,6 @@ export const BASE_URL = "/api";
 
 export const getHeaders = () => {
     const headers: Record<string, string> = {
-        credentials: "include",
         "Content-Type": "application/json",
     };
     return headers;

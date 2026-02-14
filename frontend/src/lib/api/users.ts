@@ -33,6 +33,7 @@ export const usersApi = {
         const response = await fetch(`${BASE_URL}/users/me`, {
             method: "GET",
             headers: getHeaders(),
+            credentials: "include",
         });
         return USER_PUBLIC.schema.parse(await handleResponse(response));
     },
