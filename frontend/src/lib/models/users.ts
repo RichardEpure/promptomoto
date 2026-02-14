@@ -13,6 +13,24 @@ const USER_BASE_SCHEMA = z.object({
     email: z.email("Enter a valid email address."),
 });
 
+export const USER_LOGIN = {
+    schema: z.object({
+        username: z
+            .string()
+            .min(3, "Must be at least 3 characters long.")
+            .max(50, "Must be at most 50 characters long."),
+        password: z
+            .string()
+            .min(8, "Must be at least 8 characters long.")
+            .max(128, "Must be at most 128 characters long."),
+    }),
+    defaultValues: () => ({
+        username: "",
+        password: "",
+    }),
+};
+export type UserLogin = z.infer<typeof USER_LOGIN.schema>;
+
 export const USER_CREATE = {
     schema: USER_BASE_SCHEMA.extend({
         password: z
