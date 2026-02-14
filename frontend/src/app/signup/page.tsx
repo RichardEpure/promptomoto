@@ -8,9 +8,12 @@ import { api, ApiError } from "@/lib/api";
 import { USER_CREATE, UserCreate } from "@/lib/models/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 
 export default function SignupPage() {
+    const router = useRouter();
+
     const form = useForm<UserCreate>({
         resolver: zodResolver(USER_CREATE.schema),
         defaultValues: USER_CREATE.defaultValues(),
@@ -19,7 +22,11 @@ export default function SignupPage() {
     const mutation = useMutation({
         mutationFn: api.createUser,
         onSuccess: () => {
-            console.log("User created successfully.");
+            api.login({
+                username: form.getValues("username"),
+                password: form.getValues("password"),
+            });
+            router.push("/");
         },
         onError: (error: Error) => {
             if (!(error instanceof ApiError)) {
