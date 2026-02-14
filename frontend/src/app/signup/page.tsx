@@ -20,12 +20,14 @@ export default function SignupPage() {
     });
 
     const mutation = useMutation({
-        mutationFn: api.createUser,
-        onSuccess: () => {
-            api.login({
-                username: form.getValues("username"),
-                password: form.getValues("password"),
+        mutationFn: async (userCreate: UserCreate) => {
+            await api.createUser(userCreate);
+            return api.login({
+                username: userCreate.username,
+                password: userCreate.password,
             });
+        },
+        onSuccess: () => {
             router.push("/");
         },
         onError: (error: Error) => {
