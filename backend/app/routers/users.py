@@ -60,16 +60,23 @@ AdminUser = Annotated[User, Depends(get_admin_user)]
 
 @router.post("/", response_model=UserPublic)
 def create_user(user: UserCreate, session: SessionDep):
-    # Check if user already exists
-    existing_user = session.exec(
+    conflicts = session.exec(
         select(User).where(
             (User.username == user.username) | (User.email == user.email)
         )
-    ).first()
-    if existing_user:
+    ).all()
+
+    if conflicts:
+        for conflict in conflicts:
+            detail = {"type": "user_exists"}
+            if conflict.username == user.username:
+                detail["username"] = "Username already exists"
+            if conflict.email == user.email:
+                detail["email"] = "Email already exists"
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this username or email already exists",
+            detail=detail,
         )
 
     db_user = User.model_validate(
