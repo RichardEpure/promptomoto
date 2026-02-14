@@ -4,23 +4,52 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Controller, useForm } from "react-hook-form";
-import z from "zod";
-
-const formSchema = z.object({
-    username: z.string().min(2).max(32),
-    email: z.email(),
-    password: z.string().min(8).max(128),
-});
+import { api, ApiError } from "@/lib/api";
+import { USER_CREATE, UserCreate } from "@/lib/models/users";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Controller, useForm, SubmitHandler } from "react-hook-form";
 
 export default function SignupPage() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        defaultValues: {
-            username: "",
-            email: "",
-            password: "",
+    const form = useForm<UserCreate>({
+        resolver: zodResolver(USER_CREATE.schema),
+        defaultValues: USER_CREATE.defaultValues(),
+    });
+
+    const mutation = useMutation({
+        mutationFn: api.createUser,
+        onSuccess: () => {
+            console.log("User created successfully.");
+        },
+        onError: (error: Error) => {
+            if (!(error instanceof ApiError)) {
+                return;
+            }
+
+            const details = error.detail;
+            if (details.type !== "user_exists") {
+                return;
+            }
+
+            if (details.username) {
+                form.setError("username", {
+                    type: "custom",
+                    message: "Username is taken.",
+                });
+            }
+
+            if (details.email) {
+                form.setError("email", {
+                    type: "custom",
+                    message: "Email is taken.",
+                });
+            }
         },
     });
+
+    const onSubmit: SubmitHandler<UserCreate> = (userCreate) => {
+        mutation.mutate(userCreate);
+    };
 
     return (
         <main className="flex grow flex-col items-center justify-center">
@@ -29,7 +58,7 @@ export default function SignupPage() {
                     <CardTitle>Signup</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form id="signup">
+                    <form id="signup" onSubmit={form.handleSubmit(onSubmit)}>
                         <FieldGroup>
                             <Controller
                                 name="username"
@@ -62,7 +91,7 @@ export default function SignupPage() {
                                             type="email"
                                             aria-invalid={fieldState.invalid}
                                             placeholder="example@email.com"
-                                            autoComplete="off"
+                                            autoComplete="email"
                                         />
                                         {fieldState.invalid && (
                                             <FieldError errors={[fieldState.error]} />
@@ -82,7 +111,7 @@ export default function SignupPage() {
                                             type="password"
                                             aria-invalid={fieldState.invalid}
                                             placeholder="Enter your password"
-                                            autoComplete="off"
+                                            autoComplete="new-password"
                                         />
                                         {fieldState.invalid && (
                                             <FieldError errors={[fieldState.error]} />
