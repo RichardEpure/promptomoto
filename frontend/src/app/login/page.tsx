@@ -8,9 +8,12 @@ import { api, ApiError } from "@/lib/api";
 import { USER_LOGIN, UserLogin } from "@/lib/models/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 
 export default function LoginPage() {
+    const router = useRouter();
+
     const form = useForm<UserLogin>({
         resolver: zodResolver(USER_LOGIN.schema),
         defaultValues: USER_LOGIN.defaultValues(),
@@ -18,8 +21,8 @@ export default function LoginPage() {
 
     const mutation = useMutation({
         mutationFn: api.login,
-        onSuccess: (user) => {
-            console.log("Logged in successfully:", user);
+        onSuccess: () => {
+            router.push("/");
         },
         onError: (error: Error) => {
             if (!(error instanceof ApiError)) {
