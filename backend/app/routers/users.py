@@ -63,7 +63,7 @@ def get_admin_user(current_user: CurrentUser) -> User:
 AdminUser = Annotated[User, Depends(get_admin_user)]
 
 
-@router.post("/", response_model=UserPublic)
+@router.post("", response_model=UserPublic)
 def create_user(user: UserCreate, session: SessionDep):
     conflicts = session.exec(
         select(User).where(
@@ -98,7 +98,7 @@ def read_user_me(current_user: CurrentUser):
     return current_user
 
 
-@router.get("/", response_model=list[UserPublic])
+@router.get("", response_model=list[UserPublic])
 def read_users(
     session: SessionDep,
     admin_user: AdminUser,
