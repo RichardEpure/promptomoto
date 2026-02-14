@@ -4,7 +4,7 @@ import { SearchResults } from "@/components/discover/search-results";
 
 export default function DiscoverPage() {
     return (
-        <main className="flex h-full flex-col bg-zinc-50 font-sans dark:bg-black">
+        <main className="flex h-full flex-col font-sans">
             <Suspense fallback={<div className="h-18.25 border-b" />}>
                 <SearchHeader />
             </Suspense>
