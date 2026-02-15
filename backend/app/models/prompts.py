@@ -34,5 +34,5 @@ class PromptUpdate(SQLModel):
     short_description: str | None = Field(default=None, max_length=255)
     description: str | None = Field(default=None)
     ai_model_id: uuid.UUID | None = Field(
-        default=None, nullable=False, foreign_key="aimodel.id"
+        default=None,
     )
