@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Optional
 
 from pydantic import EmailStr
 from sqlmodel import Field, SQLModel
@@ -39,7 +38,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(SQLModel):
-    username: Optional[str] = Field(default=None, min_length=3, max_length=50)
-    email: Optional[EmailStr] = Field(default=None)
-    password: Optional[str] = Field(default=None, min_length=8)
-    role: Optional[UserRole] = None
+    username: str | None = Field(default=None, min_length=3, max_length=50)
+    email: EmailStr | None = Field(default=None)
+    password: str | None = Field(default=None, min_length=8)
+    role: UserRole | None = None
