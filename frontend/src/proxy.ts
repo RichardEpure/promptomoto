@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const protectedRoutes = ["/collection"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
     const isAuthenticated = request.cookies.has("access_token");
