@@ -36,10 +36,13 @@ export const usersApi = {
         });
         await handleResponse(response);
     },
-    me: async () => {
+    me: async (headers: HeadersInit = {}) => {
         const response = await fetch(`${BASE_URL}/users/me`, {
             method: "GET",
-            headers: getHeaders(),
+            headers: {
+                ...getHeaders(),
+                ...headers,
+            },
             credentials: "include",
         });
         return USER_PUBLIC.schema.parse(await handleResponse(response));
