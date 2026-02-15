@@ -13,7 +13,7 @@ class PromptTag(str, Enum):
 
 
 class PromptBase(SQLModel):
-    name: str = Field(index=True, min_length=1, max_length=100)
+    name: str = Field(index=True, nullable=False, min_length=1, max_length=100)
     short_description: str = Field(default="", max_length=255)
     description: str = Field(default="")
     tags: list[PromptTag] = Field(default_factory=list, sa_column=Column(JSON))
