@@ -29,7 +29,6 @@ export default function LoginPage() {
         mutationFn: api.login,
         onSuccess: () => {
             auth.refetch();
-
             router.push(redirect);
         },
         onError: (error: Error) => {
