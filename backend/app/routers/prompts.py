@@ -2,9 +2,10 @@ import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, col, select
+from sqlmodel import Session, col, func, select
 
 from app.database import get_session
+from app.models.common import PaginatedResponse
 from app.models.prompts import Prompt, PromptCreate, PromptUpdate
 from app.models.users import UserRole
 from app.routers.users import CurrentUser
@@ -24,7 +25,7 @@ def create_prompt(prompt: PromptCreate, session: SessionDep, current_user: Curre
     return db_prompt
 
 
-@router.get("", response_model=list[Prompt])
+@router.get("", response_model=PaginatedResponse[Prompt])
 def read_prompts(
     session: SessionDep,
     offset: int = 0,
@@ -34,7 +35,14 @@ def read_prompts(
     query = select(Prompt)
     if search:
         query = query.where(col(Prompt.name).contains(search))
-    return session.exec(query.offset(offset).limit(limit)).all()
+
+    # Get total count
+    count_query = select(func.count()).select_from(query.subquery())
+    total: int = session.exec(count_query).one()
+
+    # Get items sliced by offset and limit
+    items = session.exec(query.offset(offset).limit(limit)).all()
+    return PaginatedResponse[Prompt](items=items, total=total)
 
 
 @router.get("/{prompt_id}", response_model=Prompt)

@@ -36,7 +36,7 @@ export default function NavigationMenu() {
     const { logout, isAuthenticated } = useAuth();
 
     return (
-        <header className="flex h-14 items-center justify-between px-4">
+        <header className="flex h-14 shrink-0 items-center justify-between px-4">
             <ShadcnNavigationMenu>
                 <NavigationMenuList>
                     <NavigationMenuItem>

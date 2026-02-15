@@ -13,7 +13,7 @@ export function SearchHeader() {
     const q = searchParams.get("q") || "";
 
     return (
-        <div className="sticky top-0 w-full border-b px-4 py-3">
+        <div className="bg-background sticky top-0 w-full border-b px-4 py-3">
             <Form action="/discover" className="mx-auto flex max-w-5xl items-center gap-4">
                 <Field orientation="horizontal">
                     <FieldLabel
