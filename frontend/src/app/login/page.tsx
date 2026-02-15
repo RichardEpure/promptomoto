@@ -9,14 +9,16 @@ import { api, ApiError } from "@/lib/api";
 import { USER_LOGIN, UserLogin } from "@/lib/models/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function LoginPage() {
     const router = useRouter();
-
     const auth = useAuth();
+
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get("redirect") || "/";
 
     const form = useForm<UserLogin>({
         resolver: zodResolver(USER_LOGIN.schema),
@@ -27,7 +29,8 @@ export default function LoginPage() {
         mutationFn: api.login,
         onSuccess: () => {
             auth.refetch();
-            router.push("/");
+
+            router.push(redirect);
         },
         onError: (error: Error) => {
             if (error instanceof ApiError) {
