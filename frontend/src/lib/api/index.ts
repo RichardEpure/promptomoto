@@ -1,3 +1,4 @@
+import { aiModelsApi } from "./ai-models";
 import { promptsApi } from "./prompts";
 import { usersApi, CreateUserErrorDetail } from "./users";
 
@@ -54,4 +55,5 @@ export async function handleResponse<T>(response: Response): Promise<T> {
 export const api = {
     ...usersApi,
     ...promptsApi,
+    ...aiModelsApi,
 };
