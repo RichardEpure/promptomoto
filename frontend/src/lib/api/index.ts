@@ -1,3 +1,4 @@
+import { promptsApi } from "./prompts";
 import { usersApi, CreateUserErrorDetail } from "./users";
 
 export interface GenericErrorDetail {
@@ -26,10 +27,7 @@ export class ApiError extends Error {
     }
 }
 
-export const BASE_URL =
-    typeof window === "undefined"
-        ? process.env.NEXT_PUBLIC_API_URL
-        : "/api";
+export const BASE_URL = typeof window === "undefined" ? process.env.NEXT_PUBLIC_API_URL : "/api";
 
 export const getHeaders = () => {
     const headers: Record<string, string> = {
@@ -55,4 +53,5 @@ export async function handleResponse<T>(response: Response): Promise<T> {
 
 export const api = {
     ...usersApi,
+    ...promptsApi,
 };
