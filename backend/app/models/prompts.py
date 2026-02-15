@@ -14,8 +14,8 @@ class PromptTag(str, Enum):
 
 class PromptBase(SQLModel):
     name: str = Field(index=True, min_length=1, max_length=100)
-    short_description: str = Field(max_length=255)
-    description: str
+    short_description: str = Field(default="", max_length=255)
+    description: str = Field(default="")
     tags: list[PromptTag] = Field(default_factory=list, sa_column=Column(JSON))
     ai_model_id: uuid.UUID = Field(index=True, nullable=False, foreign_key="aimodel.id")
 
@@ -32,7 +32,7 @@ class PromptCreate(PromptBase):
 class PromptUpdate(SQLModel):
     name: str | None = Field(default=None, min_length=1, max_length=100)
     short_description: str | None = Field(default=None, max_length=255)
-    description: str | None = None
+    description: str | None = Field(default=None)
     ai_model_id: uuid.UUID | None = Field(
         default=None, nullable=False, foreign_key="aimodel.id"
     )
