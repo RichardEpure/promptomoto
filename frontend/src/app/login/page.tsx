@@ -10,10 +10,11 @@ import { USER_LOGIN, UserLogin } from "@/lib/models/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
-export default function LoginPage() {
+export function LoginForm() {
     const router = useRouter();
     const auth = useAuth();
 
@@ -50,67 +51,75 @@ export default function LoginPage() {
     };
 
     return (
+        <Card className="w-full sm:w-lg">
+            <CardHeader>
+                <CardTitle>Login</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <form id="login" onSubmit={form.handleSubmit(onSubmit)}>
+                    <FieldGroup>
+                        <Controller
+                            name="username"
+                            control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={fieldState.invalid}>
+                                    <FieldLabel htmlFor="username">Username</FieldLabel>
+                                    <Input
+                                        {...field}
+                                        id="username"
+                                        aria-invalid={fieldState.invalid}
+                                        placeholder="Enter your username"
+                                        autoComplete="off"
+                                    />
+                                    {fieldState.invalid && (
+                                        <FieldError errors={[fieldState.error]} />
+                                    )}
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            name="password"
+                            control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={fieldState.invalid}>
+                                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                                    <Input
+                                        {...field}
+                                        id="password"
+                                        type="password"
+                                        aria-invalid={fieldState.invalid}
+                                        placeholder="Enter your password"
+                                        autoComplete="new-password"
+                                    />
+                                    {fieldState.invalid && (
+                                        <FieldError errors={[fieldState.error]} />
+                                    )}
+                                </Field>
+                            )}
+                        />
+                    </FieldGroup>
+                </form>
+            </CardContent>
+            <CardFooter>
+                <Field orientation="horizontal">
+                    <Button type="button" variant="outline" onClick={() => form.reset()}>
+                        Reset
+                    </Button>
+                    <Button type="submit" form="login">
+                        Submit
+                    </Button>
+                </Field>
+            </CardFooter>
+        </Card>
+    );
+}
+
+export default function LoginPage() {
+    return (
         <main className="flex grow flex-col items-center justify-center">
-            <Card className="w-full sm:w-lg">
-                <CardHeader>
-                    <CardTitle>Login</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form id="login" onSubmit={form.handleSubmit(onSubmit)}>
-                        <FieldGroup>
-                            <Controller
-                                name="username"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="username">Username</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="username"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="Enter your username"
-                                            autoComplete="off"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="password"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="password">Password</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="password"
-                                            type="password"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="Enter your password"
-                                            autoComplete="new-password"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError errors={[fieldState.error]} />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                        </FieldGroup>
-                    </form>
-                </CardContent>
-                <CardFooter>
-                    <Field orientation="horizontal">
-                        <Button type="button" variant="outline" onClick={() => form.reset()}>
-                            Reset
-                        </Button>
-                        <Button type="submit" form="login">
-                            Submit
-                        </Button>
-                    </Field>
-                </CardFooter>
-            </Card>
+            <Suspense fallback={<div>Loading...</div>}>
+                <LoginForm />
+            </Suspense>
         </main>
     );
 }
