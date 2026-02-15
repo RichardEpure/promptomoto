@@ -2,7 +2,7 @@ import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session, col, select
 
 from app.database import get_session
 from app.models.prompts import Prompt, PromptCreate, PromptUpdate
@@ -25,8 +25,16 @@ def create_prompt(prompt: PromptCreate, session: SessionDep, current_user: Curre
 
 
 @router.get("", response_model=list[Prompt])
-def read_prompts(session: SessionDep):
-    return session.exec(select(Prompt)).all()
+def read_prompts(
+    session: SessionDep,
+    offset: int = 0,
+    limit: int = 100,
+    search: str | None = None,
+):
+    query = select(Prompt)
+    if search:
+        query = query.where(col(Prompt.name).contains(search))
+    return session.exec(query.offset(offset).limit(limit)).all()
 
 
 @router.get("/{prompt_id}", response_model=Prompt)

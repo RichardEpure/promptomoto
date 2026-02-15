@@ -3,11 +3,14 @@ import { BASE_URL, getHeaders, handleResponse } from ".";
 import { PROMPT } from "../models/prompts";
 
 export const promptsApi = {
-    readPrompts: async () => {
-        const response = await fetch(`${BASE_URL}/prompts`, {
-            method: "GET",
-            headers: getHeaders(),
-        });
+    readPrompts: async (search: string = "", offset: number = 0, limit: number = 50) => {
+        const response = await fetch(
+            `${BASE_URL}/prompts?search=${search}&offset=${offset}&limit=${limit}`,
+            {
+                method: "GET",
+                headers: getHeaders(),
+            },
+        );
         return z.array(PROMPT.schema).parse(await handleResponse(response));
     },
     readPrompt: async (id: string) => {
