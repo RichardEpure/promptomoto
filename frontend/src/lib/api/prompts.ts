@@ -1,4 +1,3 @@
-import z from "zod";
 import { BASE_URL, getHeaders, handleResponse } from ".";
 import { getPaginatedResponseSchema, PaginatedResponse } from "../models/common";
 import { PROMPT, Prompt } from "../models/prompts";
