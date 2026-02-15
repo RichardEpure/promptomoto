@@ -23,7 +23,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         staleTime: 5 * 60 * 1000,
     });
 
-    const logout = useCallback(() => {
+    const logout = useCallback(async () => {
+        await api.logout();
         queryClient.setQueryData(["auth"], null);
         queryClient.invalidateQueries({ queryKey: ["auth"] });
     }, [queryClient]);

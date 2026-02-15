@@ -33,7 +33,7 @@ function ListItem({
 }
 
 export default function NavigationMenu() {
-    const { isAuthenticated } = useAuth();
+    const { logout, isAuthenticated } = useAuth();
 
     return (
         <header className="flex h-14 items-center justify-between px-4">
@@ -55,7 +55,11 @@ export default function NavigationMenu() {
                             <ul className="w-96">
                                 {isAuthenticated ? (
                                     <>
-                                        <ListItem href="/" title="Log Out"></ListItem>
+                                        <ListItem
+                                            href="/"
+                                            title="Log Out"
+                                            onClick={logout}
+                                        ></ListItem>
                                         <ListItem href="/collection" title="Collection"></ListItem>
                                     </>
                                 ) : (

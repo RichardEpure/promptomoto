@@ -29,6 +29,13 @@ export const usersApi = {
         });
         return USER_PUBLIC.schema.parse(await handleResponse(response));
     },
+    logout: async () => {
+        const response = await fetch(`${BASE_URL}/auth/token`, {
+            method: "DELETE",
+            credentials: "include",
+        });
+        await handleResponse(response);
+    },
     me: async () => {
         const response = await fetch(`${BASE_URL}/users/me`, {
             method: "GET",

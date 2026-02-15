@@ -34,3 +34,8 @@ def login(
         max_age=expire,
     )
     return user
+
+
+@router.delete("/token", status_code=204)
+def logout(response: Response):
+    response.delete_cookie(key="access_token")
