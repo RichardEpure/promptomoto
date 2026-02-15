@@ -149,7 +149,7 @@ def update_user(
     return db_user
 
 
-@router.delete("/{user_id}")
+@router.delete("/{user_id}", status_code=204)
 def delete_user(user_id: uuid.UUID, session: SessionDep, current_user: CurrentUser):
     user = session.get(User, user_id)
     if not user:
@@ -160,4 +160,3 @@ def delete_user(user_id: uuid.UUID, session: SessionDep, current_user: CurrentUs
 
     session.delete(user)
     session.commit()
-    return {"ok": True}
