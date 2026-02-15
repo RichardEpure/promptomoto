@@ -18,4 +18,4 @@ class AiModelCreate(AiModelBase):
 
 class AiModelUpdate(SQLModel):
     name: str | None = Field(default=None, min_length=1, max_length=100)
-    provider: str | None = Field(default=None, index=True, max_length=100)
+    provider: str | None = Field(default=None, max_length=100)
