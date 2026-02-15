@@ -26,7 +26,10 @@ export class ApiError extends Error {
     }
 }
 
-export const BASE_URL = "/api";
+export const BASE_URL =
+    typeof window === "undefined"
+        ? process.env.NEXT_PUBLIC_API_URL
+        : "/api";
 
 export const getHeaders = () => {
     const headers: Record<string, string> = {
