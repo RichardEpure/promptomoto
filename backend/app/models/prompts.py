@@ -1,7 +1,7 @@
 import uuid
 from enum import Enum
 
-from sqlalchemy import Column
+from sqlalchemy import Column, Text
 from sqlmodel import JSON, Field, SQLModel
 
 
@@ -16,6 +16,7 @@ class PromptBase(SQLModel):
     name: str = Field(index=True, nullable=False, min_length=1, max_length=100)
     short_description: str = Field(default="", max_length=255)
     description: str = Field(default="")
+    content: str = Field(default="", sa_column=Column(Text))
     tags: list[PromptTag] = Field(default_factory=list, sa_column=Column(JSON))
     ai_model_id: uuid.UUID = Field(index=True, nullable=False, foreign_key="aimodel.id")
 
