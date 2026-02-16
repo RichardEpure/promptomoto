@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { CopyButton } from "@/components/copy-button";
 import { api } from "@/lib/api";
 
 export default async function PromptPage({ params }: { params: Promise<{ id: string }> }) {
@@ -30,6 +31,11 @@ export default async function PromptPage({ params }: { params: Promise<{ id: str
             <div className="flex flex-col gap-2">
                 <h3 className="text-xl">Description</h3>
                 <div>{prompt.description}</div>
+            </div>
+            <div className="flex flex-col gap-2">
+                <h3 className="text-xl">Prompt</h3>
+                <code>{prompt.content}</code>
+                <CopyButton text={prompt.content} />
             </div>
         </main>
     );
