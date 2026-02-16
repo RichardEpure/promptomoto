@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { UserPublic } from "@/lib/models/users";
+import { UserPublic, UserRole } from "@/lib/models/users";
 
 interface AuthContext {
     user: UserPublic | null;
+    isAdmin: boolean;
     isLoading: boolean;
     isAuthenticated: boolean;
     logout: () => void;
@@ -40,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         <AuthContext
             value={{
                 user: user ?? null,
+                isAdmin: user?.role === UserRole.ADMIN,
                 isLoading,
                 isAuthenticated: !!user,
                 logout,
