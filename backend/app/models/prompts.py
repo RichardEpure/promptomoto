@@ -33,7 +33,7 @@ class PromptCreate(PromptBase):
 class PromptUpdate(SQLModel):
     name: str | None = Field(default=None, min_length=1, max_length=100)
     short_description: str | None = Field(default=None, max_length=255)
-    description: str | None = Field(default=None)
-    ai_model_id: uuid.UUID | None = Field(
-        default=None,
-    )
+    description: str | None = None
+    content: str | None = None
+    tags: list[PromptTag] | None = None
+    ai_model_id: uuid.UUID | None = None
