@@ -1,12 +1,5 @@
 import z from "zod";
 
-export enum PromptTag {
-    TEXT = "text",
-    IMAGE = "image",
-    VIDEO = "video",
-    AUDIO = "audio",
-}
-
 const AI_MODEL_BASE_SCHEMA = z.object({
     name: z
         .string()
@@ -18,18 +11,20 @@ const AI_MODEL_BASE_SCHEMA = z.object({
         .max(100, "Provider must be at most 100 characters long."),
 });
 
+const AI_MODEL_SCHEMA = AI_MODEL_BASE_SCHEMA.extend({
+    id: z.uuid(),
+});
+export type AiModel = z.infer<typeof AI_MODEL_SCHEMA>;
 export const AI_MODEL = {
-    schema: AI_MODEL_BASE_SCHEMA.extend({
-        id: z.uuid(),
-    }),
-};
-export type AiModel = z.infer<typeof AI_MODEL.schema>;
+    schema: AI_MODEL_SCHEMA,
+} as const;
 
+const AI_MODEL_CREATE_SCHEMA = AI_MODEL_BASE_SCHEMA.extend({});
+export type AiModelCreate = z.infer<typeof AI_MODEL_CREATE_SCHEMA>;
 export const AI_MODEL_CREATE = {
-    schema: AI_MODEL_BASE_SCHEMA.extend({}),
-    defaultValues: () => ({
+    schema: AI_MODEL_CREATE_SCHEMA,
+    defaultValues: (): AiModelCreate => ({
         name: "",
         provider: "",
     }),
-};
-export type AiModelCreate = z.infer<typeof AI_MODEL_CREATE.schema>;
+} as const;

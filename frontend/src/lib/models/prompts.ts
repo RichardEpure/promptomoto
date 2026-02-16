@@ -17,6 +17,7 @@ const PROMPT_BASE_SCHEMA = z.object({
         .max(255, "Short description must be at most 255 characters long.")
         .default(""),
     description: z.string().default(""),
+    content: z.string().default(""),
     tags: z.array(z.enum(PromptTag)).default([]),
     ai_model_id: z.uuid(),
 });
@@ -26,17 +27,19 @@ export const PROMPT = {
         id: z.uuid(),
         user_id: z.uuid(),
     }),
-};
+} as const;
 export type Prompt = z.infer<typeof PROMPT.schema>;
 
+const PROMPT_CREATE_SCHEMA = PROMPT_BASE_SCHEMA.extend({});
+export type PromptCreate = z.infer<typeof PROMPT_CREATE_SCHEMA>;
 export const PROMPT_CREATE = {
-    schema: PROMPT_BASE_SCHEMA.extend({}),
-    defaultValues: () => ({
+    schema: PROMPT_CREATE_SCHEMA,
+    defaultValues: (): PromptCreate => ({
         name: "",
         short_description: "",
         description: "",
+        content: "",
         tags: [],
         ai_model_id: "",
     }),
-};
-export type PromptCreate = z.infer<typeof PROMPT_CREATE.schema>;
+} as const;
