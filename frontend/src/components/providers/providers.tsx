@@ -1,13 +1,32 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/components/providers/theme/theme-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 import { useTheme } from "next-themes";
 import { AuthProvider } from "./auth";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+        onError: (error, query) => {
+            if (query.meta?.silent) {
+                return;
+            }
+            console.error("Query error:", error);
+            toast.error("Something went wrong");
+        },
+    }),
+    mutationCache: new MutationCache({
+        onError: (error, _variables, _context, mutation) => {
+            if (mutation.meta?.silent) {
+                return;
+            }
+            console.error("Mutation error:", error);
+            toast.error("Something went wrong");
+        },
+    }),
+});
 
 function AppToaster() {
     const { theme } = useTheme();

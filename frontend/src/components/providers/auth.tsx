@@ -21,6 +21,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         queryFn: async () => await api.me(),
         retry: false,
         staleTime: 5 * 60 * 1000,
+        meta: {
+            silent: true,
+        },
     });
 
     const logout = useCallback(async () => {

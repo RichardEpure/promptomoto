@@ -44,6 +44,9 @@ export function LoginForm() {
             }
             toast.error("An unexpected error occurred.");
         },
+        meta: {
+            silent: true,
+        },
     });
 
     const onSubmit: SubmitHandler<UserLogin> = (userLogin) => {

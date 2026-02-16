@@ -53,6 +53,9 @@ export default function SignupPage() {
             }
             toast.error("An unexpected error occurred.");
         },
+        meta: {
+            silent: true,
+        },
     });
 
     const onSubmit: SubmitHandler<UserCreate> = (userCreate) => {
