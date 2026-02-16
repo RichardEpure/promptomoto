@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { CopyButton } from "@/components/copy-button";
 import { api } from "@/lib/api";
+import EditPromptButton from "@/components/prompt/edit-prompt-button";
 
 export default async function PromptPage({ params }: { params: Promise<{ id: string }> }) {
     let prompt;
@@ -18,7 +19,10 @@ export default async function PromptPage({ params }: { params: Promise<{ id: str
 
     return (
         <main className="m-auto flex size-full max-w-5xl flex-col gap-5 px-8 py-5">
-            <h2 className="text-2xl">{prompt.name}</h2>
+            <div className="flex gap-4">
+                <h2 className="text-2xl">{prompt.name}</h2>
+                <EditPromptButton prompt={prompt} />
+            </div>
             <div className="flex max-h-125 grow gap-5">
                 <div className="h-full w-2/3 bg-zinc-700"></div>
                 <div className="flex h-full w-1/3 flex-col gap-4">
