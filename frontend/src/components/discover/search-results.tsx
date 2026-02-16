@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -18,6 +18,7 @@ import {
 } from "../ui/pagination";
 
 export function SearchResult({ prompt }: Readonly<{ prompt: Prompt }>) {
+    const router = useRouter();
     return (
         <Card>
             <CardHeader>
@@ -27,8 +28,8 @@ export function SearchResult({ prompt }: Readonly<{ prompt: Prompt }>) {
                 <CardTitle>{prompt.name}</CardTitle>
                 <CardDescription>{prompt.short_description}</CardDescription>
             </CardHeader>
-            <CardFooter>
-                <Button>View Prompt</Button>
+            <CardFooter className="mt-auto">
+                <Button onClick={() => router.push(`/prompt/${prompt.id}`)}>View Prompt</Button>
             </CardFooter>
         </Card>
     );
