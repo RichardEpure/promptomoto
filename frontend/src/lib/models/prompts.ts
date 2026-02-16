@@ -30,6 +30,12 @@ export const PROMPT = {
 } as const;
 export type Prompt = z.infer<typeof PROMPT.schema>;
 
+const PROMPT_UPDATE_SCHEMA = PROMPT_BASE_SCHEMA.partial();
+export type PromptUpdate = z.infer<typeof PROMPT_UPDATE_SCHEMA>;
+export const PROMPT_UPDATE = {
+    schema: PROMPT_UPDATE_SCHEMA,
+} as const;
+
 const PROMPT_CREATE_SCHEMA = PROMPT_BASE_SCHEMA.extend({});
 export type PromptCreate = z.infer<typeof PROMPT_CREATE_SCHEMA>;
 export const PROMPT_CREATE = {
