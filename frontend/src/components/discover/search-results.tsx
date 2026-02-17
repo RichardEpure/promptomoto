@@ -17,6 +17,8 @@ import {
     PaginationPrevious,
 } from "../ui/pagination";
 
+const PAGE_SIZE = 15;
+
 export function SearchResult({ prompt }: Readonly<{ prompt: Prompt }>) {
     const router = useRouter();
     return (
@@ -38,33 +40,33 @@ export function SearchResult({ prompt }: Readonly<{ prompt: Prompt }>) {
 export function SearchResults() {
     const searchParams = useSearchParams();
     const q = searchParams.get("q") || "";
-    const limit = 15; // Page size
 
     const [offset, setOffset] = useState(0);
 
     const query = useQuery({
-        queryKey: ["prompt-search", q, offset, limit],
-        queryFn: async () => await api.readPrompts(q, offset, limit),
+        queryKey: ["prompt-search", q, offset, PAGE_SIZE],
+        queryFn: async () => await api.readPrompts({ search: q, offset, limit: PAGE_SIZE }),
         retry: true,
         staleTime: Infinity,
-        placeholderData: (previousData) => previousData,
+        placeholderData: (prev) => prev,
     });
 
     const prompts = query.data?.items || [];
     const total = query.data?.total || 0;
     const isFirstPage = offset === 0;
-    const isLastPage = offset + limit >= total;
+    const isLastPage = offset + PAGE_SIZE >= total;
+    const totalPages = Math.ceil(total / PAGE_SIZE);
 
-    const currentPage = useMemo(() => Math.floor(offset / limit) + 1, [offset, limit]);
+    const currentPage = useMemo(() => Math.floor(offset / PAGE_SIZE) + 1, [offset]);
 
     const handlePrev = (e: React.MouseEvent) => {
         e.preventDefault();
-        if (!isFirstPage) setOffset((prev) => Math.max(0, prev - limit));
+        if (!isFirstPage) setOffset((prev) => Math.max(0, prev - PAGE_SIZE));
     };
 
     const handleNext = (e: React.MouseEvent) => {
         e.preventDefault();
-        if (!isLastPage) setOffset((prev) => prev + limit);
+        if (!isLastPage) setOffset((prev) => prev + PAGE_SIZE);
     };
 
     const promptsRender = query.isSuccess
@@ -75,16 +77,20 @@ export function SearchResults() {
     for (let i = currentPage - 1; i > 0 && i > currentPage - 3; i -= 1) {
         previousPagesRender.unshift(
             <PaginationItem key={i}>
-                <PaginationLink onClick={() => setOffset((i - 1) * limit)}>{i}</PaginationLink>
+                <PaginationLink onClick={() => setOffset((i - 1) * PAGE_SIZE)}>{i}</PaginationLink>
             </PaginationItem>,
         );
     }
 
     const nextPagesRender = [];
-    for (let i = currentPage + 1; i <= Math.ceil(total / limit) && i < currentPage + 3; i += 1) {
+    for (
+        let i = currentPage + 1;
+        i <= Math.ceil(total / PAGE_SIZE) && i < currentPage + 3;
+        i += 1
+    ) {
         nextPagesRender.push(
             <PaginationItem key={i}>
-                <PaginationLink onClick={() => setOffset((i - 1) * limit)}>{i}</PaginationLink>
+                <PaginationLink onClick={() => setOffset((i - 1) * PAGE_SIZE)}>{i}</PaginationLink>
             </PaginationItem>,
         );
     }
@@ -107,31 +113,35 @@ export function SearchResults() {
                     </p>
                 )}
             </div>
-            <Pagination className="mt-auto">
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            href="#"
-                            onClick={handlePrev}
-                            aria-disabled={isFirstPage}
-                            className={isFirstPage ? "pointer-events-none opacity-50" : ""}
-                        />
-                    </PaginationItem>
-                    {previousPagesRender}
-                    <PaginationItem key={currentPage}>
-                        <span className="text-muted-foreground px-4 text-sm">{currentPage}</span>
-                    </PaginationItem>
-                    {nextPagesRender}
-                    <PaginationItem>
-                        <PaginationNext
-                            href="#"
-                            onClick={handleNext}
-                            aria-disabled={isLastPage}
-                            className={isLastPage ? "pointer-events-none opacity-50" : ""}
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
+            {totalPages > 1 && (
+                <Pagination className="mt-auto">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                href="#"
+                                onClick={handlePrev}
+                                aria-disabled={isFirstPage}
+                                className={isFirstPage ? "pointer-events-none opacity-50" : ""}
+                            />
+                        </PaginationItem>
+                        {previousPagesRender}
+                        <PaginationItem key={currentPage}>
+                            <span className="text-muted-foreground px-4 text-sm">
+                                {currentPage}
+                            </span>
+                        </PaginationItem>
+                        {nextPagesRender}
+                        <PaginationItem>
+                            <PaginationNext
+                                href="#"
+                                onClick={handleNext}
+                                aria-disabled={isLastPage}
+                                className={isLastPage ? "pointer-events-none opacity-50" : ""}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            )}
         </div>
     );
 }

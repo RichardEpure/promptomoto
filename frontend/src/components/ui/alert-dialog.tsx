@@ -1,0 +1,100 @@
+"use client"
+
+import * as React from "react"
+import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react"
+
+import { cn } from "@/lib/utils"
+
+const AlertDialog = AlertDialogPrimitive.Root
+
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger
+
+function AlertDialogBackdrop({
+  className,
+  ...props
+}: AlertDialogPrimitive.Backdrop.Props) {
+  return (
+    <AlertDialogPrimitive.Backdrop
+      data-slot="alert-dialog-backdrop"
+      className={cn(
+        "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function AlertDialogPopup({
+  className,
+  children,
+  ...props
+}: AlertDialogPrimitive.Popup.Props) {
+  return (
+    <AlertDialogPrimitive.Portal>
+      <AlertDialogBackdrop />
+      <AlertDialogPrimitive.Popup
+        data-slot="alert-dialog-popup"
+        className={cn(
+          "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 fixed top-1/2 left-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </AlertDialogPrimitive.Popup>
+    </AlertDialogPrimitive.Portal>
+  )
+}
+
+function AlertDialogTitle({
+  className,
+  ...props
+}: AlertDialogPrimitive.Title.Props) {
+  return (
+    <AlertDialogPrimitive.Title
+      data-slot="alert-dialog-title"
+      className={cn("text-lg font-semibold", className)}
+      {...props}
+    />
+  )
+}
+
+function AlertDialogDescription({
+  className,
+  ...props
+}: AlertDialogPrimitive.Description.Props) {
+  return (
+    <AlertDialogPrimitive.Description
+      data-slot="alert-dialog-description"
+      className={cn("text-muted-foreground text-sm", className)}
+      {...props}
+    />
+  )
+}
+
+function AlertDialogFooter({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      data-slot="alert-dialog-footer"
+      className={cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogBackdrop,
+  AlertDialogPopup,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+}

@@ -15,5 +15,5 @@ export default async function CollectionLayout({
         redirect(`/login?${params.toString()}`);
     }
 
-    return children;
+    return <main className="container mx-auto max-w-5xl px-8 py-10">{children}</main>;
 }
