@@ -30,10 +30,13 @@ def read_prompts(
     offset: int = 0,
     limit: int = 100,
     search: str | None = None,
+    user_id: str | None = None,
 ):
     query = select(Prompt)
     if search:
         query = query.where(col(Prompt.name).contains(search))
+    if user_id:
+        query = query.where(Prompt.user_id == uuid.UUID(user_id))
 
     # Get total count
     count_query = select(func.count()).select_from(query.subquery())

@@ -3,20 +3,24 @@ import { getPaginatedResponseSchema, PaginatedResponse } from "../models/common"
 import { PROMPT, Prompt, PromptCreate, PromptUpdate } from "../models/prompts";
 
 export const promptsApi = {
-    readPrompts: async (
-        search: string = "",
-        offset: number = 0,
-        limit: number = 50,
-    ): Promise<PaginatedResponse<Prompt>> => {
+    readPrompts: async (options?: {
+        search?: string;
+        offset?: number;
+        limit?: number;
+        user_id?: string;
+    }): Promise<PaginatedResponse<Prompt>> => {
+        const { search, offset = 0, limit = 50, user_id } = options ?? {};
         const params = new URLSearchParams({
             limit: limit.toString(),
             offset: offset.toString(),
         });
         if (search) params.append("search", search);
+        if (user_id) params.append("user_id", user_id);
 
         const response = await fetch(`${BASE_URL}/prompts?${params.toString()}`, {
             method: "GET",
             headers: getHeaders(),
+            credentials: "include",
         });
         const data = await handleResponse(response);
 
