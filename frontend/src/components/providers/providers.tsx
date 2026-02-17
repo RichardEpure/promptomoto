@@ -8,19 +8,23 @@ import { useTheme } from "next-themes";
 import { AuthProvider } from "./auth";
 import { ApiError } from "@/lib/api";
 
+const handleError = (error: unknown) => {
+    if (error instanceof ApiError && error.detail.type === "generic") {
+        console.error("Error: ", error, error.detail);
+        toast.error(error.detail.message);
+        return;
+    }
+    console.error("Error:", error, error instanceof ApiError ? error.detail : null);
+    toast.error("Something went wrong");
+};
+
 const queryClient = new QueryClient({
     queryCache: new QueryCache({
         onError: (error, query) => {
             if (query.meta?.silent) {
                 return;
             }
-            if (error instanceof ApiError && error.detail.type === "generic") {
-                console.error("Query error: ", error, error.detail);
-                toast.error(error.detail.message);
-                return;
-            }
-            console.error("Query error:", error, error instanceof ApiError ? error.detail : null);
-            toast.error("Something went wrong");
+            handleError(error);
         },
     }),
     mutationCache: new MutationCache({
@@ -28,17 +32,7 @@ const queryClient = new QueryClient({
             if (mutation.meta?.silent) {
                 return;
             }
-            if (error instanceof ApiError && error.detail.type === "generic") {
-                console.error("Mutation error: ", error, error.detail);
-                toast.error(error.detail.message);
-                return;
-            }
-            console.error(
-                "Mutation error:",
-                error,
-                error instanceof ApiError ? error.detail : null,
-            );
-            toast.error("Something went wrong");
+            handleError(error);
         },
     }),
 });
