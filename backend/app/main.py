@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from app.database import create_db_and_tables
-from app.routers import ai_models, auth, prompts, users
+from app.routers import admin, ai_models, auth, prompts, users
 
 
 @asynccontextmanager
@@ -15,6 +15,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.include_router(admin.router)
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(prompts.router)
