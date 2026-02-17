@@ -11,6 +11,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN mkdir -p public
 
 # Default satisfies next build validation; overridden at runtime by env var
 ARG NEXT_PUBLIC_API_URL=http://localhost:8000
