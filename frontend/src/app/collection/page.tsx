@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
 import { Eye, MoreHorizontal, Pencil, Plus, Search, Trash2 } from "lucide-react";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import { Prompt } from "@/lib/models/prompts";
 import { useAuth } from "@/components/providers/auth";
 import { Button } from "@/components/ui/button";
@@ -24,14 +24,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination";
+import Paginator from "@/components/paginator";
 
 const PAGE_SIZE = 15;
 
@@ -82,28 +75,6 @@ export default function CollectionPage() {
 
     const prompts = query.data?.items ?? [];
     const total = query.data?.total ?? 0;
-    const isFirstPage = offset === 0;
-    const isLastPage = offset + PAGE_SIZE >= total;
-    const currentPage = useMemo(() => Math.floor(offset / PAGE_SIZE) + 1, [offset]);
-    const totalPages = Math.ceil(total / PAGE_SIZE);
-
-    const previousPages = [];
-    for (let i = currentPage - 1; i > 0 && i > currentPage - 3; i -= 1) {
-        previousPages.unshift(
-            <PaginationItem key={i}>
-                <PaginationLink onClick={() => setOffset((i - 1) * PAGE_SIZE)}>{i}</PaginationLink>
-            </PaginationItem>,
-        );
-    }
-
-    const nextPages = [];
-    for (let i = currentPage + 1; i <= totalPages && i < currentPage + 3; i += 1) {
-        nextPages.push(
-            <PaginationItem key={i}>
-                <PaginationLink onClick={() => setOffset((i - 1) * PAGE_SIZE)}>{i}</PaginationLink>
-            </PaginationItem>,
-        );
-    }
 
     return (
         <>
@@ -188,42 +159,12 @@ export default function CollectionPage() {
                     </div>
                 )}
             </div>
-            {totalPages > 1 && (
-                <Pagination className="mt-6">
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                href="#"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (!isFirstPage)
-                                        setOffset((prev) => Math.max(0, prev - PAGE_SIZE));
-                                }}
-                                aria-disabled={isFirstPage}
-                                className={isFirstPage ? "pointer-events-none opacity-50" : ""}
-                            />
-                        </PaginationItem>
-                        {previousPages}
-                        <PaginationItem>
-                            <span className="text-muted-foreground px-4 text-sm">
-                                {currentPage}
-                            </span>
-                        </PaginationItem>
-                        {nextPages}
-                        <PaginationItem>
-                            <PaginationNext
-                                href="#"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (!isLastPage) setOffset((prev) => prev + PAGE_SIZE);
-                                }}
-                                aria-disabled={isLastPage}
-                                className={isLastPage ? "pointer-events-none opacity-50" : ""}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            )}
+            <Paginator
+                total={total}
+                pageSize={PAGE_SIZE}
+                offset={offset}
+                onPageChange={(offset) => setOffset(offset)}
+            />
             <AlertDialog
                 open={!!promptToDelete}
                 onOpenChange={(open) => {

@@ -1,21 +1,14 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Prompt } from "@/lib/models/prompts";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "../ui/pagination";
+import Paginator from "../paginator";
 
 const PAGE_SIZE = 15;
 
@@ -53,47 +46,10 @@ export function SearchResults() {
 
     const prompts = query.data?.items || [];
     const total = query.data?.total || 0;
-    const isFirstPage = offset === 0;
-    const isLastPage = offset + PAGE_SIZE >= total;
-    const totalPages = Math.ceil(total / PAGE_SIZE);
-
-    const currentPage = useMemo(() => Math.floor(offset / PAGE_SIZE) + 1, [offset]);
-
-    const handlePrev = (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (!isFirstPage) setOffset((prev) => Math.max(0, prev - PAGE_SIZE));
-    };
-
-    const handleNext = (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (!isLastPage) setOffset((prev) => prev + PAGE_SIZE);
-    };
 
     const promptsRender = query.isSuccess
         ? prompts.map((prompt) => <SearchResult key={prompt.id} prompt={prompt} />)
         : null;
-
-    const previousPagesRender = [];
-    for (let i = currentPage - 1; i > 0 && i > currentPage - 3; i -= 1) {
-        previousPagesRender.unshift(
-            <PaginationItem key={i}>
-                <PaginationLink onClick={() => setOffset((i - 1) * PAGE_SIZE)}>{i}</PaginationLink>
-            </PaginationItem>,
-        );
-    }
-
-    const nextPagesRender = [];
-    for (
-        let i = currentPage + 1;
-        i <= Math.ceil(total / PAGE_SIZE) && i < currentPage + 3;
-        i += 1
-    ) {
-        nextPagesRender.push(
-            <PaginationItem key={i}>
-                <PaginationLink onClick={() => setOffset((i - 1) * PAGE_SIZE)}>{i}</PaginationLink>
-            </PaginationItem>,
-        );
-    }
 
     return (
         <div className="mx-auto flex w-full max-w-5xl grow flex-col p-8">
@@ -113,35 +69,12 @@ export function SearchResults() {
                     </p>
                 )}
             </div>
-            {totalPages > 1 && (
-                <Pagination className="mt-auto">
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                href="#"
-                                onClick={handlePrev}
-                                aria-disabled={isFirstPage}
-                                className={isFirstPage ? "pointer-events-none opacity-50" : ""}
-                            />
-                        </PaginationItem>
-                        {previousPagesRender}
-                        <PaginationItem key={currentPage}>
-                            <span className="text-muted-foreground px-4 text-sm">
-                                {currentPage}
-                            </span>
-                        </PaginationItem>
-                        {nextPagesRender}
-                        <PaginationItem>
-                            <PaginationNext
-                                href="#"
-                                onClick={handleNext}
-                                aria-disabled={isLastPage}
-                                className={isLastPage ? "pointer-events-none opacity-50" : ""}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            )}
+            <Paginator
+                total={total}
+                pageSize={PAGE_SIZE}
+                offset={offset}
+                onPageChange={(offset) => setOffset(offset)}
+            />
         </div>
     );
 }
