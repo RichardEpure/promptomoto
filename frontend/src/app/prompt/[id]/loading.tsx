@@ -9,10 +9,10 @@ export default function Loading() {
                 <Skeleton className="h-9 w-64" />
             </div>
             <div className="grid gap-6 md:grid-cols-2">
-                <Card className="bg-muted/30 flex h-75 w-full items-center justify-center">
+                <Card className="bg-muted/30 flex h-80 w-full items-center justify-center">
                     <Skeleton className="h-16 w-16 rounded-full opacity-20" />
                 </Card>
-                <Card className="h-75">
+                <Card className="h-80">
                     <CardHeader>
                         <Skeleton className="mb-2 h-6 w-24" />
                         <Skeleton className="h-4 w-48" />
