@@ -36,6 +36,6 @@ def login(
     return user
 
 
-@router.delete("/token", status_code=204)
+@router.delete("/token", status_code=status.HTTP_204_NO_CONTENT)
 def logout(response: Response):
     response.delete_cookie(key="access_token")

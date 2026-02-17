@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 
 from app.database import get_session
@@ -31,15 +31,19 @@ def read_ai_models(session: SessionDep):
 def read_ai_model(ai_model_id: str, session: SessionDep):
     db_ai_model = session.get(AiModel, uuid.UUID(ai_model_id))
     if not db_ai_model:
-        raise HTTPException(status_code=404, detail="AI model not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="AI model not found"
+        )
     return db_ai_model
 
 
-@router.delete("/{ai_model_id}", status_code=204)
+@router.delete("/{ai_model_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_ai_model(ai_model_id: str, session: SessionDep, admin_user: AdminUser):
     db_ai_model = session.get(AiModel, uuid.UUID(ai_model_id))
     if not db_ai_model:
-        raise HTTPException(status_code=404, detail="AI model not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="AI model not found"
+        )
     session.delete(db_ai_model)
     session.commit()
 
@@ -53,7 +57,9 @@ def update_ai_model(
 ):
     db_ai_model = session.get(AiModel, uuid.UUID(ai_model_id))
     if not db_ai_model:
-        raise HTTPException(status_code=404, detail="AI model not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="AI model not found"
+        )
     ai_model_data = ai_model_update.model_dump(exclude_unset=True)
     db_ai_model.sqlmodel_update(ai_model_data)
     session.add(db_ai_model)

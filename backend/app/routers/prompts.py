@@ -1,7 +1,7 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, col, func, select
 
 from app.database import get_session
@@ -49,17 +49,23 @@ def read_prompts(
 def read_prompt(prompt_id: str, session: SessionDep):
     prompt = session.get(Prompt, uuid.UUID(prompt_id))
     if not prompt:
-        raise HTTPException(status_code=404, detail="Prompt not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Prompt not found"
+        )
     return prompt
 
 
-@router.delete("/{prompt_id}", status_code=204)
+@router.delete("/{prompt_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_prompt(prompt_id: str, session: SessionDep, current_user: CurrentUser):
     db_prompt = session.get(Prompt, uuid.UUID(prompt_id))
     if not db_prompt:
-        raise HTTPException(status_code=404, detail="Prompt not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Prompt not found"
+        )
     if current_user.role != UserRole.ADMIN and db_prompt.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not enough permissions")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions"
+        )
     session.delete(db_prompt)
     session.commit()
 
@@ -73,9 +79,13 @@ def update_prompt(
 ):
     db_prompt = session.get(Prompt, uuid.UUID(prompt_id))
     if not db_prompt:
-        raise HTTPException(status_code=404, detail="Prompt not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Prompt not found"
+        )
     if current_user.role != UserRole.ADMIN and db_prompt.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Not enough permissions")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions"
+        )
     prompt_data = prompt_update.model_dump(exclude_unset=True)
     db_prompt.sqlmodel_update(prompt_data)
     session.add(db_prompt)
