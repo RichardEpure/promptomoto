@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { toast, Toaster } from "sonner";
 import { useTheme } from "next-themes";
 import { AuthProvider } from "./auth";
+import { ApiError } from "@/lib/api";
 
 const queryClient = new QueryClient({
     queryCache: new QueryCache({
@@ -13,7 +14,12 @@ const queryClient = new QueryClient({
             if (query.meta?.silent) {
                 return;
             }
-            console.error("Query error:", error);
+            if (error instanceof ApiError && error.detail.type === "generic") {
+                console.error("Query error: ", error, error.detail);
+                toast.error(error.detail.message);
+                return;
+            }
+            console.error("Query error:", error, error instanceof ApiError ? error.detail : null);
             toast.error("Something went wrong");
         },
     }),
@@ -22,7 +28,16 @@ const queryClient = new QueryClient({
             if (mutation.meta?.silent) {
                 return;
             }
-            console.error("Mutation error:", error);
+            if (error instanceof ApiError && error.detail.type === "generic") {
+                console.error("Mutation error: ", error, error.detail);
+                toast.error(error.detail.message);
+                return;
+            }
+            console.error(
+                "Mutation error:",
+                error,
+                error instanceof ApiError ? error.detail : null,
+            );
             toast.error("Something went wrong");
         },
     }),
