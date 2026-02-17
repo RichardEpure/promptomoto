@@ -12,7 +12,7 @@ export default function Loading() {
                 <Card className="bg-muted/30 flex h-75 w-full items-center justify-center">
                     <Skeleton className="h-16 w-16 rounded-full opacity-20" />
                 </Card>
-                <Card className="h-full">
+                <Card className="h-75">
                     <CardHeader>
                         <Skeleton className="mb-2 h-6 w-24" />
                         <Skeleton className="h-4 w-48" />
