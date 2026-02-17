@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { api, ApiError } from "@/lib/api";
+import { api } from "@/lib/api";
 import { Prompt, PromptCreate, PromptTag, PROMPT_CREATE, PromptUpdate } from "@/lib/models/prompts";
 import { AiModel } from "@/lib/models/ai-models";
 import { Button } from "../ui/button";
