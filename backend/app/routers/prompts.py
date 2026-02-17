@@ -17,8 +17,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 @router.post("", response_model=Prompt)
 def create_prompt(prompt: PromptCreate, session: SessionDep, current_user: CurrentUser):
-    db_prompt = Prompt.model_validate(prompt)
-    db_prompt.user_id = current_user.id
+    db_prompt = Prompt.model_validate(prompt, update={"user_id": current_user.id})
     session.add(db_prompt)
     session.commit()
     session.refresh(db_prompt)
