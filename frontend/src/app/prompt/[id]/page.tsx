@@ -8,12 +8,14 @@ import { Separator } from "@/components/ui/separator";
 import { Image as ImageIcon } from "lucide-react";
 
 export default async function PromptPage({ params }: { params: Promise<{ id: string }> }) {
-    let prompt;
-    try {
-        prompt = await api.readPrompt((await params).id);
-    } catch {
+    const prompt = await api.readPrompt((await params).id).catch(() => null);
+    if (!prompt) {
         return <div>Could not find prompt</div>;
     }
+
+    const aiModel = prompt.ai_model_id
+        ? await api.readAiModel(prompt.ai_model_id).catch(() => null)
+        : null;
 
     const tagsRender = prompt.tags.map((tag) => (
         <Badge key={tag} variant="secondary">
@@ -46,6 +48,22 @@ export default async function PromptPage({ params }: { params: Promise<{ id: str
                             <h4 className="mb-2 text-sm leading-none font-medium">Description</h4>
                             <p className="text-muted-foreground text-sm">{prompt.description}</p>
                         </div>
+                        {aiModel && (
+                            <>
+                                <Separator />
+                                <div>
+                                    <h4 className="mb-2 text-sm leading-none font-medium">
+                                        AI Model
+                                    </h4>
+                                    <p className="flex items-center gap-2">
+                                        <span className="text-sm">{aiModel.name}</span>
+                                        <span className="text-muted-foreground text-xs">
+                                            {aiModel.provider}
+                                        </span>
+                                    </p>
+                                </div>
+                            </>
+                        )}
                     </CardContent>
                 </Card>
             </div>

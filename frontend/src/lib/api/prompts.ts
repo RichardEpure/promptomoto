@@ -1,6 +1,6 @@
 import { BASE_URL, getHeaders, handleResponse } from ".";
 import { getPaginatedResponseSchema, PaginatedResponse } from "../models/common";
-import { PROMPT, Prompt, PromptUpdate } from "../models/prompts";
+import { PROMPT, Prompt, PromptCreate, PromptUpdate } from "../models/prompts";
 
 export const promptsApi = {
     readPrompts: async (
@@ -26,6 +26,15 @@ export const promptsApi = {
         const response = await fetch(`${BASE_URL}/prompts/${id}`, {
             method: "GET",
             headers: getHeaders(),
+        });
+        return PROMPT.schema.parse(await handleResponse(response));
+    },
+    createPrompt: async (promptCreate: PromptCreate) => {
+        const response = await fetch(`${BASE_URL}/prompts`, {
+            method: "POST",
+            headers: getHeaders(),
+            body: JSON.stringify(promptCreate),
+            credentials: "include",
         });
         return PROMPT.schema.parse(await handleResponse(response));
     },
