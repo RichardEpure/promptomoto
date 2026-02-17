@@ -51,4 +51,12 @@ export const promptsApi = {
         });
         return PROMPT.schema.parse(await handleResponse(response));
     },
+    deletePrompt: async (id: string) => {
+        const response = await fetch(`${BASE_URL}/prompts/${id}`, {
+            method: "DELETE",
+            headers: getHeaders(),
+            credentials: "include",
+        });
+        await handleResponse(response);
+    },
 };
