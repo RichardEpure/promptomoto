@@ -21,12 +21,10 @@ def verify_api_key(authorization: str = Header()) -> None:
         )
 
 
-@router.post("/reset-db")
+@router.post("/reset-db", status_code=status.HTTP_204_NO_CONTENT)
 def reset_db(authorization: str = Header()):
     verify_api_key(authorization)
 
     SQLModel.metadata.drop_all(engine)
     create_db_and_tables()
     populate()
-
-    return status.HTTP_204_NO_CONTENT
