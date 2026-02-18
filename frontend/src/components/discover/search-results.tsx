@@ -40,7 +40,7 @@ export function SearchResults() {
         queryKey: ["prompt-search", q, offset, PAGE_SIZE],
         queryFn: async () => await api.readPrompts({ search: q, offset, limit: PAGE_SIZE }),
         retry: true,
-        staleTime: Infinity,
+        staleTime: 5 * 60 * 1000,
         placeholderData: (prev) => prev,
     });
 

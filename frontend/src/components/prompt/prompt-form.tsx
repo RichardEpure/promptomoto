@@ -2,7 +2,7 @@
 
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
@@ -64,9 +64,12 @@ export default function PromptForm({ prompt, onSuccess }: PromptFormProps) {
     // Tags combobox anchor ref
     const tagsAnchorRef = useComboboxAnchor();
 
+    const queryClient = useQueryClient();
+
     const createMutation = useMutation({
         mutationFn: api.createPrompt,
         onSuccess: (saved) => {
+            queryClient.invalidateQueries({ queryKey: ["prompt-search"] });
             toast.success("Prompt created successfully.");
             if (onSuccess) {
                 onSuccess(saved);
@@ -79,6 +82,7 @@ export default function PromptForm({ prompt, onSuccess }: PromptFormProps) {
     const updateMutation = useMutation({
         mutationFn: (data: PromptUpdate) => api.updatePrompt(prompt!.id, data),
         onSuccess: (saved) => {
+            queryClient.invalidateQueries({ queryKey: ["prompt-search"] });
             toast.success("Prompt updated successfully.");
             if (onSuccess) {
                 onSuccess(saved);
