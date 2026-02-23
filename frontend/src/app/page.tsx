@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -43,6 +44,9 @@ export default function Home() {
                     </Button>
                 </ButtonGroup>
             </Field>
+            <Button asChild variant="secondary" className="mt-4">
+                <Link href="/discover">Browse all prompts</Link>
+            </Button>
         </main>
     );
 }
