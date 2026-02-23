@@ -41,22 +41,6 @@ ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-### Docker
-
-From the project root, ensure you've created the `backend/.env` file described above, then run:
-
-```bash
-docker compose up --build
-```
-
-If you've made changes and the build is serving stale code, rebuild without cache:
-
-```bash
-docker compose build --no-cache && docker compose up
-```
-
-This starts the backend on port **8000** and the frontend on port **3000**. The database is seeded automatically on first run.
-
 ### Local Development
 
 **Backend**
@@ -79,3 +63,31 @@ bun dev
 ```
 
 The app will be available at `http://localhost:3000`. Browser API requests are proxied to the backend via Next.js rewrites, while server-side requests are sent directly to `NEXT_PUBLIC_API_URL` configured in `.env.development`.
+
+### Docker (Development)
+
+The development Docker setup uses volume mounts to your local filesystem, so changes to your source code are picked up immediately by the dev servers (hot-reload).
+
+```bash
+docker compose -f docker-compose.dev.yml up
+```
+
+This starts the backend on port **8000** (`fastapi dev`) and the frontend on port **3000** (`bun dev`). The database is seeded automatically on startup.
+
+> **Note**: Dependencies are installed inside the container images at build time. If you add or remove packages (in `pyproject.toml` or `package.json`), you need to rebuild the images:
+>
+> ```bash
+> docker compose -f docker-compose.dev.yml up --build
+> ```
+
+### Docker (Production)
+
+```bash
+docker compose up --build
+```
+
+If you've made changes and the build is serving stale code, rebuild without cache:
+
+```bash
+docker compose build --no-cache && docker compose up
+```
