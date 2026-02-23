@@ -1,0 +1,15 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+# Install dependencies (including dev deps)
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen
+
+EXPOSE 8000
+
+# Seed the database and start FastAPI in dev mode
+CMD ["sh", "-c", "uv run python populate_db.py && uv run fastapi dev --host 0.0.0.0"]
