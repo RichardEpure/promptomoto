@@ -1,11 +1,11 @@
 import uuid
-from enum import Enum
+from enum import StrEnum
 
 from sqlalchemy import Column, Text
 from sqlmodel import JSON, Field, SQLModel
 
 
-class PromptTag(str, Enum):
+class PromptTag(StrEnum):
     IMAGE = "image"
     TEXT = "text"
     AUDIO = "audio"

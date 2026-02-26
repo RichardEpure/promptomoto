@@ -1,10 +1,6 @@
-from typing import Generic, TypeVar
-
 from sqlmodel import SQLModel
 
-T = TypeVar("T")
 
-
-class PaginatedResponse(SQLModel, Generic[T]):
+class PaginatedResponse[T](SQLModel):
     items: list[T]
     total: int

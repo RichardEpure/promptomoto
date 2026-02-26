@@ -35,11 +35,11 @@ def get_current_user(session: SessionDep, access_token: TokenDep = None) -> User
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",
             )
-    except jwt.PyJWTError:
+    except jwt.PyJWTError as err:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
-        )
+        ) from err
     user = session.get(User, uuid.UUID(user_id))
     if not user:
         raise HTTPException(

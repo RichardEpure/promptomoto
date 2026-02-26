@@ -13,3 +13,21 @@ dependencies = [
     "pyjwt>=2.10.1",
     "python-multipart>=0.0.9",
 ]
+
+[dependency-groups]
+dev = ["ruff>=0.15.0"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (import sorting)
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+]

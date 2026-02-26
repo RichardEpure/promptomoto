@@ -1,16 +1,16 @@
 import uuid
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 
 from pydantic import EmailStr
 from sqlmodel import Field, SQLModel
 
 
 def get_current_time():
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
-class UserRole(str, Enum):
+class UserRole(StrEnum):
     USER = "user"
     ADMIN = "admin"
 
