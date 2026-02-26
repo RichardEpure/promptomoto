@@ -1,0 +1,25 @@
+name: Docker Frontend Build Check
+
+on:
+  push:
+    paths:
+      - "frontend/**"
+  pull_request:
+    paths:
+      - "frontend/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Frontend Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build frontend Docker image
+        run: docker build -t frontend-test ./frontend

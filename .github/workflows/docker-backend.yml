@@ -1,0 +1,25 @@
+name: Docker Backend Build Check
+
+on:
+  push:
+    paths:
+      - "backend/**"
+  pull_request:
+    paths:
+      - "backend/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Backend Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build backend Docker image
+        run: docker build -t backend-test ./backend
