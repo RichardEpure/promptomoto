@@ -43,7 +43,7 @@ def read_prompts(
     total: int = session.exec(count_query).one()
 
     # Get items sliced by offset and limit
-    items = session.exec(query.offset(offset).limit(limit)).all()
+    items = list(session.exec(query.offset(offset).limit(limit)).all())
     return PaginatedResponse[Prompt](items=items, total=total)
 
 
