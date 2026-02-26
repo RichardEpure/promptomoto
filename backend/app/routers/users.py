@@ -105,8 +105,7 @@ def read_users(
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
 ):
-    users = session.exec(select(User).offset(offset).limit(limit)).all()
-    return users
+    return session.exec(select(User).offset(offset).limit(limit)).all()
 
 
 @router.get("/{user_id}", response_model=UserPublic)

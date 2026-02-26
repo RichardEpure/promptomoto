@@ -15,10 +15,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "ruff>=0.15.0",
-    "ty>=0.0.1",
-]
+dev = ["ruff>=0.15.0", "ty>=0.0.1"]
 
 [tool.ruff]
 target-version = "py313"
@@ -33,4 +30,18 @@ select = [
     "UP",  # pyupgrade
     "B",   # flake8-bugbear
     "SIM", # flake8-simplify
+    "S",   # flake8-bandit (security)
+    "T20", # flake8-print
+    "RET", # flake8-return
+    "PTH", # flake8-use-pathlib
+    "TC",  # flake8-type-checking
+    "N",   # pep8-naming
+    "C4",  # flake8-comprehensions
+    "PIE", # flake8-pie
+]
+
+[tool.ruff.lint.per-file-ignores]
+"populate_db.py" = [
+    "S311", # pseudo-random is fine for seeding test data
+    "T201", # print is appropriate in a CLI script
 ]
